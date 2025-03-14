@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "pgxRhvnXxcTyK50FsIZw5ImkISVmT7URk3tYaUO6XXI=",
+  "Source": "LearnDockerTest.API",
+  "BasePath": "_content/LearnDockerTest.API",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

@@ -1,0 +1,73 @@
+services:
+  learndockertestwebapi:
+    build: 
+      context: LearnDockerTest.API
+      dockerfile: Dockerfile
+    container_name: learndockertestwebapi
+    ports:      
+      - "7299:7299"
+    depends_on: [sql-app, app-seq]
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7299
+    networks:
+      - productnetwork
+    restart: on-failure
+  learndockertestwebapp:
+    build:
+      context: LearnDockerTest.MVC
+      dockerfile: Dockerfile
+    container_name: learndockertestwebapp
+    ports:      
+      - "7092:7092"
+    depends_on:
+      - learndockertestwebapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7092
+    networks:
+      - productnetwork
+    restart: on-failure
+
+  sql-app:
+    image: sreeharikv/learndockerdefaultdb
+    container_name: sqlserver
+    environment:
+      MSSQL_SA_PASSWORD: "1n9pp2.0One"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - productnetwork
+
+  app-seq:
+    image: datalust/seq:latest
+    container_name: app-seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:      
+      - "5342:80"
+    networks:
+      - productnetwork
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "44391:44391"
+    depends_on:
+      - learndockertestwebapp
+    networks:
+      productnetwork:
+        aliases:
+          - "learndockertest.com"
+          - "api.learndockertest.com"
+    restart: always
+
+
+networks:
+  productnetwork:
+
+volumes:
+  sqlvolume:
